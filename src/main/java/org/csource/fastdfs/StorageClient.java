@@ -124,6 +124,8 @@ public class StorageClient {
     }
   }
 
+
+
   /**
    * upload file to storage server (by file buff)
    *
@@ -161,6 +163,23 @@ public class StorageClient {
                               String file_ext_name, NameValuePair[] meta_list) throws IOException, MyException {
     return this.do_upload_file(ProtoCommon.STORAGE_PROTO_CMD_UPLOAD_FILE, group_name, null, null, file_ext_name,
       length, new UploadBuff(file_buff, offset, length), meta_list);
+  }
+
+  public String[] uploadStream(byte cmd, String group_name, InputStream is, long size, String file_ext_name, NameValuePair[] meta_list) throws IOException, MyException {
+    String[] var8;
+    try {
+      var8 = this.do_upload_file(cmd, group_name, (String)null, (String)null, file_ext_name, size, new UploadStream(is, size), meta_list);
+    } finally {
+      is.close();
+    }
+
+    return var8;
+  }
+
+  public String[] uploadStream(InputStream is, long size, String file_ext_name, NameValuePair[] meta_list) throws IOException, MyException {
+    String group_name = null;
+    byte cmd = 23;
+    return this.uploadStream((byte)23, group_name, is, size, file_ext_name, meta_list);
   }
 
   /**
